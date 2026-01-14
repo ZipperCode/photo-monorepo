@@ -14,22 +14,30 @@
 ## 🛠️ 技术栈
 
 ### 前端
-- **Vue 3** - 渐进式 JavaScript 框架
+- **Vue 3** - 渐进式 JavaScript 框架 (Composition API)
 - **TypeScript** - 类型安全
 - **Vite** - 极速开发体验
 - **Tailwind CSS** - 实用优先的 CSS 框架
+- **Element Plus** - Vue 3 组件库
 - **Pinia** - Vue 状态管理
 - **Vue Router** - 路由管理
 
 ### 后端
 - **FastAPI** - 现代高性能 Web 框架
 - **Python 3.11+** - 异步编程支持
-- **Motor** - MongoDB 异步驱动
+- **Beanie ODM** - MongoDB 异步 ODM (基于 Motor)
 - **Pillow** - 图片处理
 - **JWT** - 身份认证
+- **uv** - 快速 Python 包管理器
+
+### Monorepo 工具
+- **Nx** - 任务编排和缓存
+- **pnpm** - 高效的 Node.js 包管理器
+- **Schema-First** - OpenAPI → TypeScript 类型生成
 
 ### 数据库 & 部署
 - **MongoDB 7.0** - NoSQL 文档数据库
+- **Mongo Express** - MongoDB Web 管理界面
 - **Docker** - 容器化部署
 - **Nginx** - 反向代理
 
@@ -38,15 +46,21 @@
 ```
 photo-monorepo/
 ├── apps/
-│   ├── web/                    # Vue 3 前端应用
-│   └── api/                    # FastAPI 后端应用
-├── infrastructure/             # Docker 配置
+│   ├── web/                    # Vue 3 用户前端 (port 5173)
+│   ├── admin/                  # Vue 3 管理后台 (port 5174)
+│   └── server/                 # FastAPI 后端 (port 8000)
+├── packages/
+│   ├── ui/                     # 共享 Vue 组件库
+│   ├── configs/                # 共享配置 (ESLint, Tailwind, Vite)
+│   └── schema/                 # OpenAPI schema 和 TypeScript 类型
+├── infrastructure/
+│   ├── docker/                 # Dockerfiles
+│   └── scripts/                # 工具脚本
+├── storage/                    # 本地文件存储 (gitignored)
 ├── .spec-workflow/             # 项目规范文档
-│   └── specs/                  # 实施规范
-│       ├── README.md           # 总览
-│       ├── ALL-PHASES-DESIGN-SUMMARY.md
-│       └── IMPLEMENTATION-CHECKLIST.md
-├── CONTINUATION-GUIDE.md       # 续工指南
+├── docker-compose.yml          # 服务编排 (6 个服务)
+├── pnpm-workspace.yaml         # pnpm 工作区配置
+├── nx.json                     # Nx 任务编排配置
 └── README.md                   # 本文件
 ```
 
@@ -54,48 +68,82 @@ photo-monorepo/
 
 ### 环境要求
 
-- Node.js 18+
-- Python 3.11+
-- Docker & Docker Compose
-- Git
+- **Node.js** >= 20.0.0
+- **pnpm** >= 8.0.0
+- **Python** >= 3.11
+- **Docker** & **Docker Compose**
+- **uv** (Python 包管理器) - `pip install uv`
 
-### 开发环境搭建
+### 一键启动 (Docker)
 
 ```bash
 # 1. 克隆仓库
 git clone git@github.com:ZipperCode/photo-monorepo.git
 cd photo-monorepo
 
-# 2. 复制环境变量模板
+# 2. 复制并配置环境变量
 cp .env.example .env
+# 编辑 .env 设置密码: MONGO_PASSWORD, JWT_SECRET
 
-# 3. 启动所有服务 (Docker)
+# 3. 启动所有服务 (6 个容器)
 docker-compose up -d
 
 # 4. 访问应用
-# 前端: http://localhost:80
+# 用户前端: http://localhost:5173
+# 管理后台: http://localhost:5174
 # API 文档: http://localhost:8000/docs
-# MongoDB: localhost:27017
+# Mongo Express: http://localhost:8081
+# Nginx 入口: http://localhost:80
 ```
 
 ### 手动开发（不使用 Docker）
 
-#### 前端开发
+#### 安装依赖
 ```bash
-cd apps/web
-npm install
-npm run dev
-# 访问 http://localhost:5173
+# 安装 Node.js 依赖 (使用 pnpm)
+pnpm install
 ```
 
 #### 后端开发
 ```bash
-cd apps/api
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
+cd apps/server
+uv venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+uv pip install -e .
+
+# 创建 .env 文件并配置 MongoDB 连接
+cp .env.example .env
+
+# 启动后端
 uvicorn app.main:app --reload
 # 访问 http://localhost:8000
+# API 文档: http://localhost:8000/docs
+```
+
+#### 前端开发 (Web)
+```bash
+cd apps/web
+pnpm dev
+# 访问 http://localhost:5173
+```
+
+#### 前端开发 (Admin)
+```bash
+cd apps/admin
+pnpm dev
+# 访问 http://localhost:5174
+```
+
+#### 使用 Nx 运行所有服务
+```bash
+# 一键启动所有开发服务
+pnpm dev
+
+# 构建所有应用
+pnpm build
+
+# 类型同步 (从 FastAPI 生成 TypeScript 类型)
+pnpm type-sync
 ```
 
 ## 📋 实施进度
@@ -104,7 +152,7 @@ uvicorn app.main:app --reload
 
 | 阶段 | 名称 | 优先级 | 状态 |
 |------|------|--------|------|
-| 1 | 基础设施搭建 | 关键 | ⏳ 待开始 |
+| 1 | 基础设施搭建 | 关键 | ✅ 已完成 |
 | 2 | 认证系统 | 高 | ⏳ 待开始 |
 | 3 | 收录码管理 | 关键 | ⏳ 待开始 |
 | 4 | 照片上传系统 | 关键 | ⏳ 待开始 |
@@ -114,10 +162,41 @@ uvicorn app.main:app --reload
 | 8 | 测试与文档 | 高 | ⏳ 待开始 |
 | 9 | 生产部署 | 关键 | ⏳ 待开始 |
 
-**当前状态**: 📝 规划完成，待开始实施
+**当前状态**: ✅ Phase 1 完成 - 现代化 Monorepo 基础设施已搭建
+
+### Phase 1 完成内容
+
+✅ **Monorepo 架构**
+- Nx 任务编排配置
+- pnpm 工作区管理
+- 共享包结构 (ui, configs, schema)
+
+✅ **后端 (FastAPI + Beanie ODM)**
+- FastAPI 应用框架
+- Beanie ODM 集成
+- MongoDB 连接管理
+- 健康检查端点
+- CORS 中间件
+
+✅ **前端 (Vue 3 双应用)**
+- Web 用户前端 (port 5173)
+- Admin 管理后台 (port 5174)
+- Element Plus 组件库
+- Vue Router + Pinia
+- Tailwind CSS 样式
+
+✅ **Docker 容器化**
+- 6 个服务编排 (MongoDB, Mongo Express, Server, Web, Admin, Nginx)
+- 开发环境热重载
+- Nginx 反向代理配置
+
+✅ **Schema-First 开发**
+- OpenAPI schema 生成
+- TypeScript 类型自动生成
+- 前后端类型同步机制
 
 详细的实施计划和任务清单请查看：
-- **实施计划**: `.claude/plans/iridescent-juggling-pearl.md`
+- **实施计划**: `.claude/plans/delegated-watching-cray.md`
 - **任务清单**: `.spec-workflow/specs/IMPLEMENTATION-CHECKLIST.md`
 - **续工指南**: `CONTINUATION-GUIDE.md`
 

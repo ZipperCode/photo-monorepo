@@ -8,6 +8,8 @@ venv/
 env/
 ENV/
 .venv
+apps/server/.env
+apps/server/__pycache__/
 
 # Node.js
 node_modules/
@@ -17,6 +19,13 @@ yarn-error.log*
 .pnpm-debug.log*
 dist/
 .cache/
+apps/web/node_modules/
+apps/admin/node_modules/
+packages/*/node_modules/
+apps/web/dist/
+apps/admin/dist/
+apps/web/.vite/
+apps/admin/.vite/
 
 # Environment variables
 .env
@@ -37,6 +46,15 @@ Thumbs.db
 # Storage (local files)
 storage/uploads/
 storage/thumbnails/
+!storage/uploads/.gitkeep
+!storage/thumbnails/.gitkeep
+
+# Generated files
+packages/schema/openapi.json
+packages/schema/types.ts
+
+# Nx
+.nx/
 
 # Logs
 *.log

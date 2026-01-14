@@ -1,0 +1,22 @@
+{
+  "name": "photo-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Photo Collection Management System - Modern Monorepo",
+  "scripts": {
+    "dev": "nx run-many --target=dev --all",
+    "build": "nx run-many --target=build --all",
+    "type-sync": "node scripts/generate-types.js",
+    "lint": "nx run-many --target=lint --all",
+    "test": "nx run-many --target=test --all"
+  },
+  "devDependencies": {
+    "nx": "^18.0.0",
+    "@nx/vite": "^18.0.0",
+    "pnpm": "^8.15.0"
+  },
+  "engines": {
+    "node": ">=20.0.0",
+    "pnpm": ">=8.0.0"
+  }
+}

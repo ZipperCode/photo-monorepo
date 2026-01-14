@@ -1,0 +1,15 @@
+{
+  "name": "@photo/ui",
+  "version": "1.0.0",
+  "description": "Shared Vue component library for Photo Monorepo",
+  "main": "./src/index.ts",
+  "type": "module",
+  "dependencies": {
+    "vue": "^3.4.0",
+    "element-plus": "^2.5.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.0",
+    "typescript": "^5.3.0"
+  }
+}
