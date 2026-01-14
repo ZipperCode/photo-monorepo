@@ -202,10 +202,18 @@ pnpm type-sync
 
 ## 📖 文档
 
+### 核心文档
 - [续工指南](./CONTINUATION-GUIDE.md) - 如何继续项目开发
 - [实施总览](./.spec-workflow/specs/README.md) - 所有阶段概述
 - [设计汇总](./.spec-workflow/specs/ALL-PHASES-DESIGN-SUMMARY.md) - 技术决策和组件设计
 - [任务清单](./.spec-workflow/specs/IMPLEMENTATION-CHECKLIST.md) - 可执行的任务列表
+
+### 项目上下文（AI 辅助开发）
+- [快速参考](./.context/QUICK-REFERENCE.md) - 2 分钟项目概览
+- [完整上下文](./.context/PROJECT-CONTEXT.md) - 15 分钟深度理解
+- [上下文系统](./.context/README.md) - 上下文管理系统说明
+
+> 💡 **AI 开发提示**: 使用 `.context/` 目录中的文档可以让 AI 助手（Claude、GPT 等）更准确地理解项目架构和技术决策。
 
 ## 🎨 UI/UX 设计
 
