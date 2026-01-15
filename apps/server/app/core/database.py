@@ -45,8 +45,8 @@ async def init_db():
     try:
         # Import document models here to avoid circular imports
         from app.models.user import User
+        from app.models.collection import Collection
         # from app.models.photo import Photo
-        # from app.models.collection import Collection
 
         database = mongo_client[settings.mongodb_db_name]
 
@@ -55,8 +55,8 @@ async def init_db():
             database=database,
             document_models=[
                 User,
+                Collection,
                 # Photo,
-                # Collection,
                 # Add more models as they are created
             ]
         )

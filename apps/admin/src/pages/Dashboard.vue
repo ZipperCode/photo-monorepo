@@ -20,12 +20,19 @@
     <el-card class="dashboard-card">
       <div class="card-content">
         <el-result
-          icon="info"
-          title="Dashboard Under Development"
-          sub-title="The admin dashboard is currently being built. Check back soon for photo management features."
+          icon="success"
+          title="Admin Dashboard"
+          sub-title="Manage your photo collections and upload codes"
         >
           <template #extra>
-            <el-tag type="info">Phase 2: Authentication Complete</el-tag>
+            <div class="dashboard-actions">
+              <el-button type="primary" size="large" @click="$router.push('/collections')">
+                Manage Collections
+              </el-button>
+            </div>
+            <div class="phase-info">
+              <el-tag type="success">Phase 3: Collection Management Complete</el-tag>
+            </div>
           </template>
         </el-result>
       </div>
@@ -120,5 +127,15 @@ async function handleLogout() {
 
 .card-content {
   padding: 40px 20px;
+}
+
+.dashboard-actions {
+  margin-bottom: 16px;
+}
+
+.phase-info {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
 }
 </style>
