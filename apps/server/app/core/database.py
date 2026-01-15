@@ -44,8 +44,9 @@ async def init_db():
     """Initialize Beanie with document models."""
     try:
         # Import document models here to avoid circular imports
+        from app.models.user import User
         # from app.models.photo import Photo
-        # from app.models.user import User
+        # from app.models.collection import Collection
 
         database = mongo_client[settings.mongodb_db_name]
 
@@ -53,17 +54,46 @@ async def init_db():
         await init_beanie(
             database=database,
             document_models=[
+                User,
                 # Photo,
-                # User,
+                # Collection,
                 # Add more models as they are created
             ]
         )
 
         logger.info("Beanie initialized successfully")
 
+        # Create default admin user if not exists
+        await create_default_admin()
+
     except Exception as e:
         logger.error(f"Failed to initialize Beanie: {e}")
         raise
+
+
+async def create_default_admin():
+    """Create default admin user if none exists."""
+    from app.models.user import get_user_by_username, create_user
+
+    try:
+        # Check if any admin user exists
+        admin = await get_user_by_username("admin")
+
+        if not admin:
+            # Create default admin user
+            # IMPORTANT: Change this password in production!
+            default_password = "admin123456"
+            await create_user("admin", default_password)
+            logger.warning(
+                "Default admin user created. Username: admin, Password: %s. "
+                "Please change this password immediately!",
+                default_password
+            )
+        else:
+            logger.info("Admin user already exists")
+
+    except Exception as e:
+        logger.error(f"Failed to create default admin user: {e}")
 
 
 async def close_mongo_connection():

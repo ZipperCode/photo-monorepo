@@ -4,6 +4,7 @@ import logging
 
 from app.core.config import settings
 from app.core.database import connect_to_mongo, init_db, close_mongo_connection
+from app.api.v1 import api_router
 
 # Configure logging
 logging.basicConfig(
@@ -28,6 +29,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include API v1 router
+app.include_router(api_router)
 
 
 @app.on_event("startup")
