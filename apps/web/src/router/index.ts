@@ -7,6 +7,11 @@ const router = createRouter({
       path: '/',
       name: 'home',
       component: () => import('../pages/Home.vue')
+    },
+    {
+      path: '/upload/:code',
+      name: 'upload',
+      component: () => import('../pages/Upload.vue')
     }
   ]
 })
